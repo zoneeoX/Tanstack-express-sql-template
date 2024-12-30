@@ -11,18 +11,10 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
-import { Route as SettingsProfileImport } from './routes/settings/profile'
-import { Route as SettingsNotificationImport } from './routes/settings/notification'
+import { Route as TodoCreateImport } from './routes/todo/create'
 
 // Create/Update Routes
-
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -30,15 +22,9 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const SettingsProfileRoute = SettingsProfileImport.update({
-  id: '/settings/profile',
-  path: '/settings/profile',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const SettingsNotificationRoute = SettingsNotificationImport.update({
-  id: '/settings/notification',
-  path: '/settings/notification',
+const TodoCreateRoute = TodoCreateImport.update({
+  id: '/todo/create',
+  path: '/todo/create',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,25 +39,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
-    }
-    '/settings/notification': {
-      id: '/settings/notification'
-      path: '/settings/notification'
-      fullPath: '/settings/notification'
-      preLoaderRoute: typeof SettingsNotificationImport
-      parentRoute: typeof rootRoute
-    }
-    '/settings/profile': {
-      id: '/settings/profile'
-      path: '/settings/profile'
-      fullPath: '/settings/profile'
-      preLoaderRoute: typeof SettingsProfileImport
+    '/todo/create': {
+      id: '/todo/create'
+      path: '/todo/create'
+      fullPath: '/todo/create'
+      preLoaderRoute: typeof TodoCreateImport
       parentRoute: typeof rootRoute
     }
   }
@@ -81,52 +53,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/settings/notification': typeof SettingsNotificationRoute
-  '/settings/profile': typeof SettingsProfileRoute
+  '/todo/create': typeof TodoCreateRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/settings/notification': typeof SettingsNotificationRoute
-  '/settings/profile': typeof SettingsProfileRoute
+  '/todo/create': typeof TodoCreateRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/settings/notification': typeof SettingsNotificationRoute
-  '/settings/profile': typeof SettingsProfileRoute
+  '/todo/create': typeof TodoCreateRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/settings/notification' | '/settings/profile'
+  fullPaths: '/' | '/todo/create'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/settings/notification' | '/settings/profile'
-  id:
-    | '__root__'
-    | '/'
-    | '/about'
-    | '/settings/notification'
-    | '/settings/profile'
+  to: '/' | '/todo/create'
+  id: '__root__' | '/' | '/todo/create'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  SettingsNotificationRoute: typeof SettingsNotificationRoute
-  SettingsProfileRoute: typeof SettingsProfileRoute
+  TodoCreateRoute: typeof TodoCreateRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  SettingsNotificationRoute: SettingsNotificationRoute,
-  SettingsProfileRoute: SettingsProfileRoute,
+  TodoCreateRoute: TodoCreateRoute,
 }
 
 export const routeTree = rootRoute
@@ -140,22 +97,14 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
-        "/settings/notification",
-        "/settings/profile"
+        "/todo/create"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/about": {
-      "filePath": "about.tsx"
-    },
-    "/settings/notification": {
-      "filePath": "settings/notification.tsx"
-    },
-    "/settings/profile": {
-      "filePath": "settings/profile.tsx"
+    "/todo/create": {
+      "filePath": "todo/create.tsx"
     }
   }
 }

@@ -1,1 +1,45 @@
 // Function untuk komunikasi ke backend gunain axios
+import axios from "axios";
+
+export async function getTodo() {
+  try {
+    const response = await axios.get("http://localhost:3000/api/todo/");
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function postTodo(data: any) {
+  const { title, description, difficulty, due_date } = data;
+  try {
+    const response = await axios.post("http://localhost:3000/api/todo/create", {
+      title,
+      description,
+      difficulty,
+      due_date,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteTodo(id: number) {
+  try {
+    const response = await axios.delete(`http://localhost:3000/api/todo/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// export async function postTodo({ queryKey }: any) {
+//   const [_key, { title, description, difficulty, due_date }] = queryKey;
+//   try {
+//     console.log(title, description, difficulty, due_date);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
