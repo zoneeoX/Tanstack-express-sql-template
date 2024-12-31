@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { postTodo } from "../../api/api";
 import { usePostTodo } from "../../react-query/queries";
 
 export const Route = createFileRoute("/todo/create")({
@@ -22,7 +21,7 @@ function RouteComponent() {
     setData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const { mutateAsync: postTodo, isPending: isLoadingCreate } = usePostTodo();
+  const { mutateAsync: postTodo } = usePostTodo();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();

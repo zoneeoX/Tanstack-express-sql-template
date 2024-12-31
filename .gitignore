@@ -1,0 +1,10 @@
+# Ignore .env in the server directory
+/server/.env
+
+# Ignore node_modules in both client and server directories
+/client/node_modules/
+/server/node_modules/
+
+# Ignore build directories if applicable
+/client/build/
+/server/build/

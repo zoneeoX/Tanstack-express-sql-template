@@ -1,12 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useDeleteTodo, useGetTodo } from "../react-query/queries";
-import { deleteTodo } from "../api/api";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+
   const { status, data, error } = useGetTodo();
   const { mutateAsync: deleteTodo } = useDeleteTodo();
 
@@ -27,7 +28,6 @@ function RouteComponent() {
   }
 
   const handleDeleteTodo = async (id: number) => {
-    console.log(id);
     try {
       const response = await deleteTodo(id);
       if (response?.ok) {
@@ -36,6 +36,10 @@ function RouteComponent() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const toEditPage = (id: number) => {
+    navigate({ to: `/todo/${id}` });
   };
 
   return (
@@ -51,7 +55,7 @@ function RouteComponent() {
             <p>{difficulty}</p>
             <p>{due_date}</p>
             <div className="flex flex-row gap-2">
-              <button>Edit</button>
+              <button onClick={() => toEditPage(id)}>Edit</button>
               <button onClick={() => handleDeleteTodo(id)}>Delete</button>
             </div>
           </li>

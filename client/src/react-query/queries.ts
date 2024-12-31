@@ -1,5 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteTodo, getTodo, postTodo } from "../api/api";
+import {
+  deleteTodo,
+  editTodo,
+  getSingleTodo,
+  getTodo,
+  postTodo,
+} from "../api/api";
 
 interface ITodo {
   title: string;
@@ -16,6 +22,13 @@ export const useGetTodo = () => {
   });
 };
 
+export const useGetSingleTodo = (id: number) => {
+  return useQuery({
+    queryKey: ["getSingleTodo", id],
+    queryFn: () => getSingleTodo(id),
+  });
+};
+
 export const usePostTodo = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -23,6 +36,18 @@ export const usePostTodo = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["postTodo"],
+      });
+    },
+  });
+};
+
+export const useEditTodo = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: any) => editTodo(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getTodo"],
       });
     },
   });

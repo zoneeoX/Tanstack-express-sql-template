@@ -11,6 +11,18 @@ export async function getTodo() {
   }
 }
 
+export async function getSingleTodo(id: number) {
+  try {
+    const response = await axios.get(`http://localhost:3000/api/todo/${id}`);
+    if (!response) {
+      console.log({ msg: "Error" });
+    }
+    return response.data[0];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function postTodo(data: any) {
   const { title, description, difficulty, due_date } = data;
   try {
@@ -26,9 +38,29 @@ export async function postTodo(data: any) {
   }
 }
 
+export async function editTodo(data: any) {
+  const { title, description, difficulty, due_date, id } = data;
+  try {
+    const response = await axios.put(
+      `http://localhost:3000/api/todo/edit/${id}`,
+      {
+        title,
+        description,
+        difficulty,
+        due_date,
+      }
+    );
+    return console.log({ msg: "Success", data: response });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function deleteTodo(id: number) {
   try {
-    const response = await axios.delete(`http://localhost:3000/api/todo/delete/${id}`);
+    const response = await axios.delete(
+      `http://localhost:3000/api/todo/delete/${id}`
+    );
     return response.data;
   } catch (error) {
     console.log(error);
