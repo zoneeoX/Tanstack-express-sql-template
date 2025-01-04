@@ -31,7 +31,7 @@ function RouteComponent() {
       console.log(error);
     } finally {
       navigate({ to: "/" });
-    }
+    } 
   };
 
   return (
