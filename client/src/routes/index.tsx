@@ -2,6 +2,14 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useDeleteTodo, useGetTodo } from "../react-query/queries";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: ({ context }) => {
+    const { username } = context.authentication;
+
+    if (username) {
+      console.log(username);
+    }
+  },
+
   component: RouteComponent,
 });
 
