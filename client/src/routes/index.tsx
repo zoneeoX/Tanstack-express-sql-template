@@ -1,12 +1,12 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useDeleteTodo, useGetTodo } from "../react-query/queries";
 
 export const Route = createFileRoute("/")({
   beforeLoad: ({ context }) => {
-    const { username } = context.authentication;
+    const { isAuthenticated } = context.authentication;
 
-    if (username) {
-      console.log(username);
+    if (!isAuthenticated) {
+      throw redirect({ to: "/authentication/login" });
     }
   },
 

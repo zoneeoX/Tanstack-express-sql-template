@@ -14,6 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as TodoCreateImport } from './routes/todo/create'
 import { Route as TodoIdImport } from './routes/todo/$id'
+import { Route as AuthenticationRegisterImport } from './routes/authentication/register'
+import { Route as AuthenticationLoginImport } from './routes/authentication/login'
 
 // Create/Update Routes
 
@@ -35,6 +37,18 @@ const TodoIdRoute = TodoIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthenticationRegisterRoute = AuthenticationRegisterImport.update({
+  id: '/authentication/register',
+  path: '/authentication/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthenticationLoginRoute = AuthenticationLoginImport.update({
+  id: '/authentication/login',
+  path: '/authentication/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -44,6 +58,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/authentication/login': {
+      id: '/authentication/login'
+      path: '/authentication/login'
+      fullPath: '/authentication/login'
+      preLoaderRoute: typeof AuthenticationLoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/authentication/register': {
+      id: '/authentication/register'
+      path: '/authentication/register'
+      fullPath: '/authentication/register'
+      preLoaderRoute: typeof AuthenticationRegisterImport
       parentRoute: typeof rootRoute
     }
     '/todo/$id': {
@@ -67,12 +95,16 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/authentication/login': typeof AuthenticationLoginRoute
+  '/authentication/register': typeof AuthenticationRegisterRoute
   '/todo/$id': typeof TodoIdRoute
   '/todo/create': typeof TodoCreateRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/authentication/login': typeof AuthenticationLoginRoute
+  '/authentication/register': typeof AuthenticationRegisterRoute
   '/todo/$id': typeof TodoIdRoute
   '/todo/create': typeof TodoCreateRoute
 }
@@ -80,27 +112,49 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/authentication/login': typeof AuthenticationLoginRoute
+  '/authentication/register': typeof AuthenticationRegisterRoute
   '/todo/$id': typeof TodoIdRoute
   '/todo/create': typeof TodoCreateRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/todo/$id' | '/todo/create'
+  fullPaths:
+    | '/'
+    | '/authentication/login'
+    | '/authentication/register'
+    | '/todo/$id'
+    | '/todo/create'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/todo/$id' | '/todo/create'
-  id: '__root__' | '/' | '/todo/$id' | '/todo/create'
+  to:
+    | '/'
+    | '/authentication/login'
+    | '/authentication/register'
+    | '/todo/$id'
+    | '/todo/create'
+  id:
+    | '__root__'
+    | '/'
+    | '/authentication/login'
+    | '/authentication/register'
+    | '/todo/$id'
+    | '/todo/create'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticationLoginRoute: typeof AuthenticationLoginRoute
+  AuthenticationRegisterRoute: typeof AuthenticationRegisterRoute
   TodoIdRoute: typeof TodoIdRoute
   TodoCreateRoute: typeof TodoCreateRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticationLoginRoute: AuthenticationLoginRoute,
+  AuthenticationRegisterRoute: AuthenticationRegisterRoute,
   TodoIdRoute: TodoIdRoute,
   TodoCreateRoute: TodoCreateRoute,
 }
@@ -116,12 +170,20 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/authentication/login",
+        "/authentication/register",
         "/todo/$id",
         "/todo/create"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/authentication/login": {
+      "filePath": "authentication/login.tsx"
+    },
+    "/authentication/register": {
+      "filePath": "authentication/register.tsx"
     },
     "/todo/$id": {
       "filePath": "todo/$id.tsx"
