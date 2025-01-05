@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { IUser } from "../../types";
+import { useLoginUser } from "../../react-query/queries";
 
 export const Route = createFileRoute("/authentication/login")({
   component: RouteComponent,
@@ -7,7 +9,9 @@ export const Route = createFileRoute("/authentication/login")({
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const [user, setUser] = useState({
+  const { mutateAsync: loginUser } = useLoginUser();
+
+  const [user, setUser] = useState<IUser>({
     username: "",
     password: "",
   });
@@ -25,9 +29,20 @@ function RouteComponent() {
     }));
   };
 
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await loginUser(user);
+      return response;
+    } catch (error) {
+      console.log({ msg: "ERROR MESSAGE: ", error });
+    }
+  };
+
   return (
     <div>
-      <form action="">
+      <form onSubmit={handleSubmit}>
         <fieldset>
           <div>
             <label htmlFor="">username</label>

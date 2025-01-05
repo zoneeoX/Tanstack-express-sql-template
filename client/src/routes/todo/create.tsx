@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { usePostTodo } from "../../react-query/queries";
+import { ITodo } from "../../types";
 
 export const Route = createFileRoute("/todo/create")({
   component: RouteComponent,
@@ -9,14 +10,14 @@ export const Route = createFileRoute("/todo/create")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  interface todoInformation {
-    title: string;
-    description: string;
-    difficulty: string;
-    due_date: string;
-  }
+  // interface ITodo {
+  //   title: string;
+  //   description: string;
+  //   difficulty: string;
+  //   due_date: string;
+  // }
 
-  const [data, setData] = useState<todoInformation>({
+  const [data, setData] = useState<ITodo>({
     title: "",
     description: "",
     difficulty: "",
@@ -30,7 +31,7 @@ function RouteComponent() {
 
   const { mutateAsync: postTodo } = usePostTodo();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await postTodo(data);

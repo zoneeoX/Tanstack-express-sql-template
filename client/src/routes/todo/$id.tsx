@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEditTodo, useGetSingleTodo } from "../../react-query/queries";
 import { useState, useEffect } from "react";
+import { ITodoWithID } from "../../types";
 
 export const Route = createFileRoute("/todo/$id")({
   component: RouteComponent,
@@ -12,15 +13,7 @@ function RouteComponent() {
   const { mutateAsync: editTodo } = useEditTodo();
   const navigate = useNavigate();
 
-  interface todoInformation {
-    title: string;
-    description: string;
-    difficulty: string;
-    due_date: string;
-    id: any;
-  }
-
-  const [changedData, setChangedData] = useState<todoInformation>({
+  const [changedData, setChangedData] = useState<ITodoWithID>({
     title: "",
     description: "",
     difficulty: "",

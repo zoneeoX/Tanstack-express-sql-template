@@ -4,15 +4,11 @@ import {
   editTodo,
   getSingleTodo,
   getTodo,
+  loginUser,
   postTodo,
+  postUser,
 } from "../api/api";
-
-interface ITodo {
-  title: string;
-  description: string;
-  difficulty: string;
-  due_date: string;
-}
+import { ITodo, ITodoWithID, IUser } from "../types";
 
 // Disini dimana fungsi react-query dijalanin
 export const useGetTodo = () => {
@@ -44,7 +40,7 @@ export const usePostTodo = () => {
 export const useEditTodo = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: any) => editTodo(data),
+    mutationFn: (data: ITodoWithID) => editTodo(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["getTodo"],
@@ -60,6 +56,30 @@ export const useDeleteTodo = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["getTodo"],
+      });
+    },
+  });
+};
+
+export const usePostUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: IUser) => postUser(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["postUser"],
+      });
+    },
+  });
+};
+
+export const useLoginUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: IUser) => loginUser(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["loginUser"],
       });
     },
   });

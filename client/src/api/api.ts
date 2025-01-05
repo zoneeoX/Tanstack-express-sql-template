@@ -1,13 +1,13 @@
 // Function untuk komunikasi ke backend gunain axios
 import axios from "axios";
+import { ITodo, IUser } from "../types";
 
-interface todoInformation {
-  title: string;
-  description: string;
-  difficulty: string;
-  due_date: string;
-  id: number;
-}
+// interface ITodo {
+//   title: string;
+//   description: string;
+//   difficulty: string;
+//   due_date: string;
+// }
 
 export async function getTodo() {
   try {
@@ -19,7 +19,7 @@ export async function getTodo() {
   }
 }
 
-export async function getSingleTodo(id: todoInformation["id"]) {
+export async function getSingleTodo(id: number) {
   try {
     const response = await axios.get(`http://localhost:3000/api/todo/${id}`);
     if (!response) {
@@ -31,7 +31,7 @@ export async function getSingleTodo(id: todoInformation["id"]) {
   }
 }
 
-export async function postTodo(data: todoInformation) {
+export async function postTodo(data: ITodo) {
   const { title, description, difficulty, due_date } = data;
   try {
     const response = await axios.post("http://localhost:3000/api/todo/create", {
@@ -46,7 +46,7 @@ export async function postTodo(data: todoInformation) {
   }
 }
 
-export async function editTodo(data: todoInformation) {
+export async function editTodo(data: any) {
   const { title, description, difficulty, due_date, id } = data;
   try {
     const response = await axios.put(
@@ -64,7 +64,7 @@ export async function editTodo(data: todoInformation) {
   }
 }
 
-export async function deleteTodo(id: todoInformation["id"]) {
+export async function deleteTodo(id: number) {
   try {
     const response = await axios.delete(
       `http://localhost:3000/api/todo/delete/${id}`
@@ -72,6 +72,45 @@ export async function deleteTodo(id: todoInformation["id"]) {
     return response.data;
   } catch (error) {
     console.log(error);
+  }
+}
+
+// @ AUTHENTICATION
+
+export async function postUser(data: IUser) {
+  const { username, password } = data;
+
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/register",
+      {
+        username,
+        password,
+      }
+    );
+
+    if (response.status === 200) {
+      return response;
+    }
+  } catch (error) {
+    console.log({ msg: "ERROR MESSAGE: ", error });
+  }
+}
+
+export async function loginUser(data: IUser) {
+  const { username, password } = data;
+
+  console.log(data);
+
+  try {
+    const response = await axios.post("http://localhost:3000/api/auth/login", {
+      username,
+      password,
+    });
+
+    return response.data[0];
+  } catch (error) {
+    console.log({ msg: "ERROR MESSAGE: ", error });
   }
 }
 

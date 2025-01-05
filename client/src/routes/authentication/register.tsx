@@ -1,17 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { IUser } from "../../types";
+import { usePostUser } from "../../react-query/queries";
 
 export const Route = createFileRoute("/authentication/register")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  interface userCredential {
-    username: string;
-    password: string;
-  }
+  const { mutateAsync: postUser } = usePostUser();
 
-  const [user, setUser] = useState<userCredential>({
+  const [user, setUser] = useState<IUser>({
     username: "",
     password: "",
   });
@@ -24,10 +23,18 @@ function RouteComponent() {
     }));
   };
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await postUser(user);
+      return response;
+    } catch (error) {
+      console.log({ msg: "ERROR MESSAGE: ", error });
+    }
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <fieldset>
         <div>
           <label htmlFor="">Username</label>
