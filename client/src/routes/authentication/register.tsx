@@ -6,7 +6,12 @@ export const Route = createFileRoute("/authentication/register")({
 });
 
 function RouteComponent() {
-  const [user, setUser] = useState({
+  interface userCredential {
+    username: string;
+    password: string;
+  }
+
+  const [user, setUser] = useState<userCredential>({
     username: "",
     password: "",
   });
@@ -18,6 +23,8 @@ function RouteComponent() {
       [name]: value,
     }));
   };
+
+  const handleSubmit = async () => {};
 
   return (
     <form>
@@ -43,7 +50,9 @@ function RouteComponent() {
           />
         </div>
       </fieldset>
-      <button type="submit" className="bg-slate-900 text-white">Submit Register</button>
+      <button type="submit" className="bg-slate-900 text-white">
+        Submit Register
+      </button>
     </form>
   );
 }

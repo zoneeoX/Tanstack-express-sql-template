@@ -1,6 +1,14 @@
 // Function untuk komunikasi ke backend gunain axios
 import axios from "axios";
 
+interface todoInformation {
+  title: string;
+  description: string;
+  difficulty: string;
+  due_date: string;
+  id: number;
+}
+
 export async function getTodo() {
   try {
     const response = await axios.get("http://localhost:3000/api/todo/");
@@ -11,7 +19,7 @@ export async function getTodo() {
   }
 }
 
-export async function getSingleTodo(id: number) {
+export async function getSingleTodo(id: todoInformation["id"]) {
   try {
     const response = await axios.get(`http://localhost:3000/api/todo/${id}`);
     if (!response) {
@@ -23,7 +31,7 @@ export async function getSingleTodo(id: number) {
   }
 }
 
-export async function postTodo(data: any) {
+export async function postTodo(data: todoInformation) {
   const { title, description, difficulty, due_date } = data;
   try {
     const response = await axios.post("http://localhost:3000/api/todo/create", {
@@ -38,7 +46,7 @@ export async function postTodo(data: any) {
   }
 }
 
-export async function editTodo(data: any) {
+export async function editTodo(data: todoInformation) {
   const { title, description, difficulty, due_date, id } = data;
   try {
     const response = await axios.put(
@@ -56,7 +64,7 @@ export async function editTodo(data: any) {
   }
 }
 
-export async function deleteTodo(id: number) {
+export async function deleteTodo(id: todoInformation["id"]) {
   try {
     const response = await axios.delete(
       `http://localhost:3000/api/todo/delete/${id}`

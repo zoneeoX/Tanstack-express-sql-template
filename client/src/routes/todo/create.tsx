@@ -9,7 +9,14 @@ export const Route = createFileRoute("/todo/create")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const [data, setData] = useState({
+  interface todoInformation {
+    title: string;
+    description: string;
+    difficulty: string;
+    due_date: string;
+  }
+
+  const [data, setData] = useState<todoInformation>({
     title: "",
     description: "",
     difficulty: "",
@@ -31,7 +38,7 @@ function RouteComponent() {
       console.log(error);
     } finally {
       navigate({ to: "/" });
-    } 
+    }
   };
 
   return (

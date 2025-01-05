@@ -12,7 +12,15 @@ function RouteComponent() {
   const { mutateAsync: editTodo } = useEditTodo();
   const navigate = useNavigate();
 
-  const [changedData, setChangedData] = useState({
+  interface todoInformation {
+    title: string;
+    description: string;
+    difficulty: string;
+    due_date: string;
+    id: any;
+  }
+
+  const [changedData, setChangedData] = useState<todoInformation>({
     title: "",
     description: "",
     difficulty: "",
