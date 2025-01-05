@@ -18,3 +18,22 @@ export const register = async (req, res) => {
     res.status(400).json(error);
   }
 };
+
+export const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    db.query(
+      "SELECT * from users WHERE username=? AND password=?",
+      [username, password],
+      (err, result) => {
+        if (result.length > 0) {
+          res.status(200).json(result);
+        } else {
+          res.status(400).json({ msg: "Cant find users", err });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(400).json({ msg: "Invalid Credentials" });
+  }
+};
