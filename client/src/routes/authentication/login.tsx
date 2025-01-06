@@ -4,11 +4,18 @@ import { IUser } from "../../types";
 import { useLoginUser } from "../../react-query/queries";
 
 export const Route = createFileRoute("/authentication/login")({
+  // loader: ({ context }) => {
+  //  const { isFetched, username } = context.authentication
+
+  //  console.log(context)
+  // },
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  // const { username, isFetched } = useAuth();
   const navigate = useNavigate();
+
   const { mutateAsync: loginUser } = useLoginUser();
 
   const [user, setUser] = useState<IUser>({
@@ -29,11 +36,13 @@ function RouteComponent() {
     }));
   };
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await loginUser(user);
+      if (response) {
+        navigate({ to: "/" });
+      }
       return response;
     } catch (error) {
       console.log({ msg: "ERROR MESSAGE: ", error });

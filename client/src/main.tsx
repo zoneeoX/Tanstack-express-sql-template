@@ -3,7 +3,7 @@ import { RouterProvider, createRouter, Link } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthContext } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 import { StrictMode } from "react";
 
 const router = createRouter({
@@ -24,8 +24,9 @@ const router = createRouter({
 });
 
 function InnerApp() {
-  const auth = AuthContext;
-  return <RouterProvider router={router} context={{ authentication: auth }} />;
+  const authentication = useAuth();
+
+  return <RouterProvider router={router} context={{ authentication }} />;
 }
 
 declare module "@tanstack/react-router" {

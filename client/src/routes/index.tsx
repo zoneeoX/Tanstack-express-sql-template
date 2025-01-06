@@ -1,14 +1,32 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useDeleteTodo, useGetTodo } from "../react-query/queries";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: ({ context }) => {
-    const { isAuthenticated } = context.authentication;
+  // @ FIRST METHOD WORKS :D but INNEFICENT
+  // loader: async () => {
+  //   try {
+  //     const response = await getUser();
 
-    if (!isAuthenticated) {
-      throw redirect({ to: "/authentication/login" });
-    }
-  },
+  //     if (response) {
+  //       throw redirect({ to: "/" });
+  //     } else {
+  //       throw redirect({ to: "/authentication/login" });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // },
+
+  // @ THIS METHOD WORKS BETTER BECAUSE I FORGOT THERE IS ISLOADING PARAM ;D
+  // preload: true,
+  // beforeLoad: ({ context }) => {
+  //   const { isLogged, isLoading } = context.authentication;
+
+
+  //   if (!isLogged && isLoading) {
+  //     throw redirect({ to: "/authentication/login" });
+  //   }
+  // },
 
   component: RouteComponent,
 });

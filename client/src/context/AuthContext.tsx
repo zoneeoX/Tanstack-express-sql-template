@@ -1,7 +1,13 @@
+import { useGetLogUser } from "../react-query/queries";
 
-const INITIAL_VALUES = {
-  username: "Test User",
-  isAuthenticated: false,
+export const useAuth = () => {
+  const { data, isLoading, isError, isFetched } = useGetLogUser();
+
+  return {
+    username: data?.user?.username || "",
+    isLogged: data?.loggedIn || false,
+    isLoading,
+    isError,
+    isFetched,
+  };
 };
-
-export const AuthContext = INITIAL_VALUES;

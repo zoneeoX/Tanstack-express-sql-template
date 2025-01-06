@@ -9,6 +9,9 @@ import { ITodo, IUser } from "../types";
 //   due_date: string;
 // }
 
+// @ INI PENTING BANGET NOTE NIH BIAR BISA SEND COOKIES KE BACKEND
+axios.defaults.withCredentials = true;
+
 export async function getTodo() {
   try {
     const response = await axios.get("http://localhost:3000/api/todo/");
@@ -89,9 +92,7 @@ export async function postUser(data: IUser) {
       }
     );
 
-    if (response.status === 200) {
-      return response;
-    }
+    return response;
   } catch (error) {
     console.log({ msg: "ERROR MESSAGE: ", error });
   }
@@ -100,17 +101,26 @@ export async function postUser(data: IUser) {
 export async function loginUser(data: IUser) {
   const { username, password } = data;
 
-  console.log(data);
-
   try {
     const response = await axios.post("http://localhost:3000/api/auth/login", {
       username,
       password,
     });
 
-    return response.data[0];
+    if (response.status === 200) {
+      return response;
+    }
   } catch (error) {
     console.log({ msg: "ERROR MESSAGE: ", error });
+  }
+}
+
+export async function getUser() {
+  try {
+    const response = await axios.get("http://localhost:3000/api/auth/login");
+    return response.data;
+  } catch (error) {
+    console.log({ msg: "Error" });
   }
 }
 

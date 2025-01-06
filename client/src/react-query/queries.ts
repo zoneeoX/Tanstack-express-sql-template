@@ -4,6 +4,7 @@ import {
   editTodo,
   getSingleTodo,
   getTodo,
+  getUser,
   loginUser,
   postTodo,
   postUser,
@@ -84,6 +85,13 @@ export const useLoginUser = () => {
     },
   });
 };
+
+export const useGetLogUser = () => {
+  return useQuery({
+    queryKey: ["getUser"],
+    queryFn: async () => await getUser(),
+  });
+}
 
 // export const usePostTodo = ({
 //   title,

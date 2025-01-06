@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { IUser } from "../../types";
 import { usePostUser } from "../../react-query/queries";
@@ -9,6 +9,7 @@ export const Route = createFileRoute("/authentication/register")({
 
 function RouteComponent() {
   const { mutateAsync: postUser } = usePostUser();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState<IUser>({
     username: "",
@@ -27,7 +28,11 @@ function RouteComponent() {
     e.preventDefault();
     try {
       const response = await postUser(user);
-      return response;
+      console.log(response);
+
+      if (response) {
+        navigate({ to: "/authentication/login" });
+      }
     } catch (error) {
       console.log({ msg: "ERROR MESSAGE: ", error });
     }

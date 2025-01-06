@@ -6,10 +6,10 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 type RouterContext = {
-  authentication: typeof AuthContext;
+  authentication: ReturnType<typeof useAuth>;
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -27,6 +27,12 @@ function RootComponent() {
           </Link>{" "}
           <Link to="/todo/create" className="[&.active]:font-bold">
             Create
+          </Link>
+          <Link to="/authentication/login" className="[&.active]:font-bold">
+            Login
+          </Link>
+          <Link to="/authentication/register" className="[&.active]:font-bold">
+            Register
           </Link>
         </section>
       </div>
