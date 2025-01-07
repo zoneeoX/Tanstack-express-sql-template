@@ -1,4 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { useState } from "react";
 import { IUser } from "../../types";
 import { useLoginUser } from "../../react-query/queries";
@@ -15,6 +19,7 @@ export const Route = createFileRoute("/authentication/login")({
 function RouteComponent() {
   // const { username, isFetched } = useAuth();
   const navigate = useNavigate();
+  const router = useRouter();
 
   const { mutateAsync: loginUser } = useLoginUser();
 
@@ -42,6 +47,7 @@ function RouteComponent() {
       const response = await loginUser(user);
       if (response) {
         navigate({ to: "/" });
+        router.invalidate();
       }
       return response;
     } catch (error) {

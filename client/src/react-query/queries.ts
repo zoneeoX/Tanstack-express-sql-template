@@ -74,13 +74,15 @@ export const usePostUser = () => {
   });
 };
 
+
+// @ PENTING INI NOTE SALAAH SATU BUG YANG GW ALAMIN, KALO QUERY LOGIN MAKE SURE QUERYKEY LAGI UNTUK FETCH USERNYA, NOTE * "GETUSER"
 export const useLoginUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: IUser) => loginUser(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["loginUser"],
+        queryKey: ["getUser"],
       });
     },
   });
