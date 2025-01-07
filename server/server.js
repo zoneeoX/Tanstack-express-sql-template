@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
     key: "userId",
-    secret: "zone", // replace this pake di env nanti
+    secret: "zone",
     resave: false,
     saveUninitialized: false,
     cookie: {

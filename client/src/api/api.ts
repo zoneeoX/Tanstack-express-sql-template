@@ -107,6 +107,9 @@ export async function loginUser(data: IUser) {
       password,
     });
 
+    console.log(response);
+    localStorage.setItem("token", response.data.token);
+
     if (response.status === 200) {
       return response;
     }
@@ -118,10 +121,21 @@ export async function loginUser(data: IUser) {
 export async function getUser() {
   try {
     const response = await axios.get("http://localhost:3000/api/auth/login");
+    // console.log(response);
     return response.data;
   } catch (error) {
     console.log({ msg: "Error" });
   }
+}
+
+export async function isAuth() {
+  const response = await axios.get("http://localhost:3000/api/auth/", {
+    headers: {
+      "x-access-token": localStorage.getItem("token"),
+    },
+  });
+
+  console.log(response);
 }
 
 // export async function postTodo({ queryKey }: any) {

@@ -5,6 +5,7 @@ import {
   getSingleTodo,
   getTodo,
   getUser,
+  isAuth,
   loginUser,
   postTodo,
   postUser,
@@ -74,7 +75,6 @@ export const usePostUser = () => {
   });
 };
 
-
 // @ PENTING INI NOTE SALAAH SATU BUG YANG GW ALAMIN, KALO QUERY LOGIN MAKE SURE QUERYKEY LAGI UNTUK FETCH USERNYA, NOTE * "GETUSER"
 export const useLoginUser = () => {
   const queryClient = useQueryClient();
@@ -93,7 +93,21 @@ export const useGetLogUser = () => {
     queryKey: ["getUser"],
     queryFn: async () => await getUser(),
   });
-}
+};
+
+// @ https://stackoverflow.com/questions/69663395/how-to-return-a-request-function-from-usequery-in-react-query // LIAT DI KOMENNYA PENTING
+// PENGEN NGAMBIL FUNCTIONNYA AJA
+export const useIsAuthUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => isAuth(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getUser"],
+      });
+    },
+  });
+};
 
 // export const usePostTodo = ({
 //   title,

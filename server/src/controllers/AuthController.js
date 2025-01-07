@@ -1,5 +1,6 @@
 import { db } from "../database/db.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const salt = 10;
 
@@ -101,18 +102,24 @@ export const login = async (req, res) => {
     });
 
     if (users.length === 0) {
-      return res.status(404).json({ msg: "User not found" });
+      return res.json({ auth: false, message: "Wrong credential 🤔" });
     }
 
     const user = users[0];
     const isPasswordMatch = await bcrypt.compare(password, user.password);
 
     if (isPasswordMatch) {
+      const id = user.id;
+      // SECRET KEYNYA MASUKIN .ENV INI CONTOH DOANG
+      const token = jwt.sign({ id }, "zone", {
+        expiresIn: 300,
+      });
+
       req.session.user = user;
-      console.log(req.session.users);
-      res.status(200).json({ msg: "Login successful" });
+
+      res.json({ auth: true, token: token, users: user });
     } else {
-      res.status(401).json({ msg: "Invalid credentials" });
+      res.json({ auth: false, message: "No Users Exists" });
     }
   } catch (error) {
     console.error("Error during login:", error);
@@ -121,10 +128,14 @@ export const login = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-  if (req.session.user) {
-    console.log(req.session.user);
-    res.send({ loggedIn: true, user: req.session.user });
+  if (req.session.user || req.session.userId) {
+    console.log(req.session.user || req.session.userId);
+    res.send({ loggedIn: true, user: req.session.user || req.session.userId });
   } else {
     res.send({ loggedIn: false });
   }
+};
+
+export const isAuth = async (req, res, next) => {
+  res.send("Authenticated :D");
 };
