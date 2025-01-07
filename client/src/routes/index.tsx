@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useDeleteTodo, useGetTodo } from "../react-query/queries";
+import { useAuthContext } from "../context/AuthContext";
 
 export const Route = createFileRoute("/")({
   // @ FIRST METHOD WORKS :D but INNEFICENT
@@ -22,7 +23,6 @@ export const Route = createFileRoute("/")({
   // beforeLoad: ({ context }) => {
   //   const { isLogged, isLoading } = context.authentication;
 
-
   //   if (!isLogged && isLoading) {
   //     throw redirect({ to: "/authentication/login" });
   //   }
@@ -36,6 +36,10 @@ function RouteComponent() {
 
   const { status, data, error } = useGetTodo();
   const { mutateAsync: deleteTodo } = useDeleteTodo();
+
+  const { isLogged, username, isLoading } = useAuthContext();
+
+  console.log({ isLogged, username, isLoading });
 
   interface ITodo {
     title: string;
