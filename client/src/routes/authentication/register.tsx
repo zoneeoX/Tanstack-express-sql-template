@@ -14,6 +14,7 @@ function RouteComponent() {
   const [user, setUser] = useState<IUser>({
     username: "",
     password: "",
+    role: "user",
   });
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -32,7 +32,7 @@ const salt = 10;
 
 // @ REFACTORED BETTER VERSION :D
 export const register = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, role } = req.body;
 
   // CHECK DATA
   if (!username || !password) {
@@ -43,10 +43,11 @@ export const register = async (req, res) => {
     // HASH PASSWORD WITH SALT
     const hash = await bcrypt.hash(password, salt);
     //SEPERATE QUERY UNTUK DB.QUERY
-    const query = "INSERT INTO users (username, password) VALUES (?, ?)";
+    const query =
+      "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
     //RESULT DENGAN PROMISE
     const result = await new Promise((resolve, reject) => {
-      db.query(query, [username, hash], (err, result) => {
+      db.query(query, [username, hash, role], (err, result) => {
         if (err) return reject(err);
         resolve(result);
       });
@@ -110,14 +111,12 @@ export const login = async (req, res) => {
 
     if (isPasswordMatch) {
       const id = user.id;
-      // SECRET KEYNYA MASUKIN .ENV INI CONTOH DOANG
-      const token = jwt.sign({ id }, "zone", {
-        expiresIn: 300,
-      });
+      const role = user.role;
+      const token = jwt.sign({ id, role }, "zone", { expiresIn: 300 });
 
       req.session.user = user;
 
-      res.json({ auth: true, token: token, users: user });
+      res.json({ auth: true, token: token, users: { id, username, role } });
     } else {
       res.json({ auth: false, message: "No Users Exists" });
     }
@@ -126,6 +125,48 @@ export const login = async (req, res) => {
     res.status(500).json({ msg: "Internal server error" });
   }
 };
+
+// export const login = async (req, res) => {
+//   const { username, password, role } = req.body;
+
+//   if (!username || !password) {
+//     return res.status(400).json({ msg: "Username and password are required" });
+//   }
+
+//   try {
+//     const query = "SELECT * FROM users WHERE username = ?";
+//     const users = await new Promise((resolve, reject) => {
+//       db.query(query, [username], (err, result) => {
+//         if (err) return reject(err);
+//         resolve(result);
+//       });
+//     });
+
+//     if (users.length === 0) {
+//       return res.json({ auth: false, message: "Wrong credential 🤔" });
+//     }
+
+//     const user = users[0];
+//     const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+//     if (isPasswordMatch) {
+//       const id = user.id;
+//       // SECRET KEYNYA MASUKIN .ENV INI CONTOH DOANG
+//       const token = jwt.sign({ id, role: user.role }, "zone", {
+//         expiresIn: 300,
+//       });
+
+//       req.session.user = user;
+
+//       res.json({ auth: true, token: token, users: user });
+//     } else {
+//       res.json({ auth: false, message: "No Users Exists" });
+//     }
+//   } catch (error) {
+//     console.error("Error during login:", error);
+//     res.status(500).json({ msg: "Internal server error" });
+//   }
+// };
 
 export const getUser = async (req, res) => {
   if (req.session.user || req.session.userId) {
@@ -138,4 +179,12 @@ export const getUser = async (req, res) => {
 
 export const isAuth = async (req, res, next) => {
   res.send("Authenticated :D");
+};
+
+export const amIAdmin = async (req, res, next) => {
+  res.send("Yes you are an admin");
+};
+
+export const amIManager = async (req, res, next) => {
+  res.send("Yes you are a manager");
 };

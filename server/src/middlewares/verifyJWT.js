@@ -6,13 +6,14 @@ export const verifyJWT = (req, res, next) => {
   console.log(token)
 
   if (!token) {
-    res.send("No token :(  ");
+    res.send("No token :(  " + token);
   } else {
     jwt.verify(token, "zone", (err, decoded) => {
       if (err) {
         res.json({ auth: false, message: "Failed Authenticate" });
       } else {
         req.userId = decoded.id;
+        req.role = decoded.role;
         next();
       }
     });

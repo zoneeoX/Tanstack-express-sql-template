@@ -81,7 +81,7 @@ export async function deleteTodo(id: number) {
 // @ AUTHENTICATION
 
 export async function postUser(data: IUser) {
-  const { username, password } = data;
+  const { username, password, role } = data;
 
   try {
     const response = await axios.post(
@@ -89,6 +89,7 @@ export async function postUser(data: IUser) {
       {
         username,
         password,
+        role,
       }
     );
 
@@ -135,7 +136,27 @@ export async function isAuth() {
     },
   });
 
-  console.log(response);
+  return response;
+}
+
+export async function isAdmin() {
+  const response = await axios.get("http://localhost:3000/api/auth/admin", {
+    headers: {
+      "x-access-token": localStorage.getItem("token"),
+    },
+  });
+
+  return response;
+}
+
+export async function isManager() {
+  const response = await axios.get("http://localhost:3000/api/auth/manager", {
+    headers: {
+      "x-access-token": localStorage.getItem("token"),
+    },
+  });
+
+  return response;
 }
 
 // export async function postTodo({ queryKey }: any) {

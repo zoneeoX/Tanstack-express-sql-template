@@ -5,7 +5,9 @@ import {
   getSingleTodo,
   getTodo,
   getUser,
+  isAdmin,
   isAuth,
+  isManager,
   loginUser,
   postTodo,
   postUser,
@@ -101,6 +103,30 @@ export const useIsAuthUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => isAuth(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getUser"],
+      });
+    },
+  });
+};
+
+export const useIsAdmin = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => isAdmin(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getUser"],
+      });
+    },
+  });
+};
+
+export const useIsManager = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => isManager(),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["getUser"],

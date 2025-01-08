@@ -26,6 +26,7 @@ function RouteComponent() {
   const [user, setUser] = useState<IUser>({
     username: "",
     password: "",
+    role: "",
   });
 
   function redirectToRegister() {

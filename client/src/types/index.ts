@@ -13,4 +13,5 @@ export interface ITodoWithID extends ITodo {
 export interface IUser {
   username: string;
   password: string;
+  role: string;
 }

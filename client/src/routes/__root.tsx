@@ -8,7 +8,11 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useAuthContext } from "../context/AuthContext";
-import { useIsAuthUser } from "../react-query/queries";
+import {
+  useIsAdmin,
+  useIsAuthUser,
+  useIsManager,
+} from "../react-query/queries";
 // import { useAuth } from "../context/AuthContext";
 
 // type RouterContext = {
@@ -24,10 +28,41 @@ function RootComponent() {
   // const { isAuth } = useIsAuthUser();
 
   const { mutateAsync: isAuth } = useIsAuthUser();
+  const { mutateAsync: isAdmin } = useIsAdmin();
+  const { mutateAsync: isManager } = useIsManager();
 
-  function get() {
-    isAuth();
-  }
+  // function get() {
+  //   isAuth();
+  // }
+
+  const amIJwt = async () => {
+    try {
+      const response = await isAuth();
+      console.log(response)
+      alert(response.data);
+    } catch (error) {
+      alert("error, check console bro");
+    }
+  };
+
+  const amIAdmin = async () => {
+    try {
+      const response = await isAdmin();
+      console.log(response)
+      alert(response.data);
+    } catch (error) {
+      alert("You are not admin bro 🤣");
+    }
+  };
+
+  const amIManager = async () => {
+    try {
+      const response = await isManager();
+      alert(response.data);
+    } catch (error) {
+      alert("You are not manager bro 🤣");
+    }
+  };
 
   return (
     <React.Fragment>
@@ -44,12 +79,26 @@ function RootComponent() {
             )}
           </h1>
           {isLogged && (
-            <button
-              className="bg-slate-700 hover:bg-slate-600 px-2 py-1"
-              onClick={get}
-            >
-              Check JWT :D
-            </button>
+            <div className="flex flex-row gap-6">
+              <button
+                className="bg-white text-black px-4 py-2 rounded-xl hover:bg-gradient-to-r from-purple-500 to-orange-400 transition hover:text-white"
+                onClick={amIJwt}
+              >
+                Check JWT 😀
+              </button>
+              <button
+                onClick={amIManager}
+                className="bg-white text-black px-4 py-2 rounded-xl hover:bg-gradient-to-r from-purple-500 to-orange-400 transition hover:text-white"
+              >
+                Are you a manager? 😎
+              </button>{" "}
+              <button
+                onClick={amIAdmin}
+                className="bg-white text-black px-4 py-2 rounded-xl hover:bg-gradient-to-r from-purple-500 to-orange-400 transition hover:text-white"
+              >
+                Are you an admin? 👨‍🦰
+              </button>
+            </div>
           )}
         </div>
         <section className="flex-row gap-6 flex">
