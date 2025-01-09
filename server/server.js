@@ -18,6 +18,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 

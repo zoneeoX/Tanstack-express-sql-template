@@ -112,6 +112,7 @@ export const login = async (req, res) => {
     if (isPasswordMatch) {
       const id = user.id;
       const role = user.role;
+      
       const token = jwt.sign({ id, role }, "zone", { expiresIn: 300 });
 
       req.session.user = user;
