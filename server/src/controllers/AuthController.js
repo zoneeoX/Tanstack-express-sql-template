@@ -1,6 +1,7 @@
 import { db } from "../database/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { generateAccessToken } from "../../utils/utils.js";
 
 const salt = 10;
 
@@ -112,12 +113,35 @@ export const login = async (req, res) => {
     if (isPasswordMatch) {
       const id = user.id;
       const role = user.role;
-      
-      const token = jwt.sign({ id, role }, "zone", { expiresIn: 300 });
+
+      const accessToken = generateAccessToken({ id, role });
+      const refreshToken = jwt.sign({ id, role }, "zone_refresh");
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+      });
+
+      //@ POST KE DB REFRESH_TOKENS
+      const query =
+        "INSERT INTO refresh_tokens (refresh_token, user_id) VALUES (?, ?)";
+
+      await new Promise((resolve, reject) => {
+        db.query(query, [refreshToken, id], (err, result) => {
+          if (err) return reject(err);
+          resolve(result);
+        });
+      });
 
       req.session.user = user;
 
-      res.json({ auth: true, token: token, users: { id, username, role } });
+      res.json({
+        auth: true,
+        token: accessToken,
+        refresh_token: refreshToken,
+        users: { id, username, role },
+      });
     } else {
       res.json({ auth: false, message: "No Users Exists" });
     }
@@ -126,6 +150,67 @@ export const login = async (req, res) => {
     res.status(500).json({ msg: "Internal server error" });
   }
 };
+
+export const tokenRefresh = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "No refresh token provided" });
+    }
+
+    const query = "SELECT * FROM refresh_tokens WHERE refresh_token = ?";
+    const tokens = await new Promise((resolve, reject) => {
+      db.query(query, [refreshToken], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+
+    if (tokens.length === 0) {
+      return res.status(403).json({ message: "Invalid refresh token" });
+    }
+
+    jwt.verify(refreshToken, "zone_refresh", (err, user) => {
+      if (err)
+        return res.status(403).json({ message: "Token expired or invalid" });
+
+      const accessToken = generateAccessToken({ id: user.id, role: user.role });
+      res.json({ accessToken });
+    });
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "No refresh token provided" });
+    }
+
+    const query = "DELETE FROM refresh_tokens WHERE refresh_token = ?";
+
+    await new Promise((resolve, reject) => {
+      db.query(query, [refreshToken], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+
+    res.clearCookie("refreshToken");
+    res.clearCookie("userId")
+
+    res.status(200).json({ message: "Successfully logged out" });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 // export const login = async (req, res) => {
 //   const { username, password, role } = req.body;

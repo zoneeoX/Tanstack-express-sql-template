@@ -12,7 +12,9 @@ import {
   useIsAdmin,
   useIsAuthUser,
   useIsManager,
+  useLogout,
 } from "../react-query/queries";
+import { refreshAccessToken } from "../api/api";
 // import { useAuth } from "../context/AuthContext";
 
 // type RouterContext = {
@@ -30,15 +32,20 @@ function RootComponent() {
   const { mutateAsync: isAuth } = useIsAuthUser();
   const { mutateAsync: isAdmin } = useIsAdmin();
   const { mutateAsync: isManager } = useIsManager();
+  const { mutateAsync: logoutUser } = useLogout();
 
   // function get() {
   //   isAuth();
   // }
 
+  React.useEffect(() => {
+    refreshAccessToken();
+  }, []);
+
   const amIJwt = async () => {
     try {
       const response = await isAuth();
-      console.log(response)
+      console.log(response);
       alert(response.data);
     } catch (error) {
       alert("error, check console bro");
@@ -48,7 +55,7 @@ function RootComponent() {
   const amIAdmin = async () => {
     try {
       const response = await isAdmin();
-      console.log(response)
+      console.log(response);
       alert(response.data);
     } catch (error) {
       alert("You are not admin bro 🤣");
@@ -64,6 +71,15 @@ function RootComponent() {
     }
   };
 
+  const logoutBruh = async () => {
+    try {
+      const response = await logoutUser();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <React.Fragment>
       <div className="flex flex-1 p-4 items-center justify-between h-[10vh] bg-slate-800 text-white">
@@ -73,6 +89,12 @@ function RootComponent() {
               <div className="flex flex-row gap-1">
                 <span>Logged in as </span>{" "}
                 <p className="bg-red-400 px-2">{username}</p>
+                <button
+                  className="px-4 py-2 rounded-xl bg-red-600 text-white"
+                  onClick={logoutBruh}
+                >
+                  logout
+                </button>
               </div>
             ) : (
               "Zonii's SQL + Express + Tanstack Template"

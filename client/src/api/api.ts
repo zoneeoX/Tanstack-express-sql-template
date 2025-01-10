@@ -139,6 +139,35 @@ export async function isAuth() {
   return response;
 }
 
+export const refreshAccessToken = async () => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/token",
+      {},
+      { withCredentials: true }
+    );
+
+    localStorage.setItem("token", response.data.accessToken);
+
+    console.log("Access token refreshed:", response.data.accessToken);
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/logout",
+      {},
+      { withCredentials: true }
+    );
+    console.log(response.data.message);
+  } catch (error) {
+    console.error("Error logging out 😢:", error);
+  }
+}
+
 export async function isAdmin() {
   const response = await axios.get("http://localhost:3000/api/auth/admin", {
     headers: {

@@ -9,6 +9,7 @@ import {
   isAuth,
   isManager,
   loginUser,
+  logoutUser,
   postTodo,
   postUser,
 } from "../api/api";
@@ -127,6 +128,18 @@ export const useIsManager = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => isManager(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getUser"],
+      });
+    },
+  });
+};
+
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => logoutUser(),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["getUser"],
